@@ -57,7 +57,7 @@ pipeline {
                         docker stop client-service || true
                         docker rm client-service || true
                         echo "Starting new container..."
-                        docker run -d --name client-service -p 80:80 ${IMAGE_NAME}:latest
+                        docker run -d --name client-service -p 80:3000 ${IMAGE_NAME}:latest
                         echo "Verifying deployment..."
                         docker ps | grep client-service
                         echo "Deployment completed successfully!"
