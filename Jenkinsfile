@@ -46,19 +46,17 @@ pipeline {
 
         stage('Deploy to EC2') {
             steps {
-                sshagent([SSH_KEY_CREDENTIALS]) {
-                    script {
-                        sh """
-                        ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} '
-                            echo "Pulling latest Docker image from Docker Hub..."
-                            echo "${DOCKERHUB_CRED_PSW}" | docker login -u "${DOCKERHUB_CRED_USR}" --password-stdin &&
-                            docker pull ${IMAGE_NAME}:latest &&
-                            docker stop client-service || true &&
-                            docker rm client-service || true &&
-                            docker run -d --name client-service -p 80:80 ${IMAGE_NAME}:latest
-                        '
-                        """
-                    }
+                withCredentials([file(credentialsId: 'ec2-ssh-key', variable: 'SSH_KEY_PATH')]) {
+                    sh """
+                    ssh -i $SSH_KEY_PATH -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} '
+                        echo "Pulling latest Docker image from Docker Hub..."
+                        echo "${DOCKERHUB_CRED_PSW}" | docker login -u "${DOCKERHUB_CRED_USR}" --password-stdin &&
+                        docker pull ${IMAGE_NAME}:latest &&
+                        docker stop client-service || true &&
+                        docker rm client-service || true &&
+                        docker run -d --name client-service -p 80:80 ${IMAGE_NAME}:latest
+                    '
+                    """
                 }
             }
         }
