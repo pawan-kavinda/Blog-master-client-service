@@ -7,7 +7,6 @@ pipeline {
         IMAGE_TAG = "${env.BUILD_NUMBER}"
         EC2_USER = 'ec2-user'
         EC2_HOST = '13.217.143.170'
-        SSH_KEY_CREDENTIALS = 'ec2-ssh-key'  
     }
 
     stages {
@@ -46,15 +45,16 @@ pipeline {
 
         stage('Deploy to EC2') {
             steps {
-                withCredentials([file(credentialsId: 'ec2-ssh-key', variable: 'SSH_KEY_PATH')]) {
+                sshagent(credentials: ['ec2-ssh-key']) {
                     sh """
-                    ssh -i $SSH_KEY_PATH -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} '
+                    ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} '
                         echo "Pulling latest Docker image from Docker Hub..."
                         echo "${DOCKERHUB_CRED_PSW}" | docker login -u "${DOCKERHUB_CRED_USR}" --password-stdin &&
                         docker pull ${IMAGE_NAME}:latest &&
                         docker stop client-service || true &&
                         docker rm client-service || true &&
-                        docker run -d --name client-service -p 80:80 ${IMAGE_NAME}:latest
+                        docker run -d --name client-service -p 80:80 ${IMAGE_NAME}:latest &&
+                        echo "Deployment completed successfully!"
                     '
                     """
                 }
