@@ -1,25 +1,25 @@
-# Build stage
-FROM node:20-alpine AS build
-
+# ---- Stage 1: Build ----
+FROM node:20-alpine AS builder
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm install
+RUN npm ci --verbose
 
 COPY . .
 RUN npm run build
 
-# Production stage
-FROM nginx:stable-alpine
+# ---- Stage 2: Production ----
+FROM node:20-alpine AS production
+WORKDIR /app
 
-COPY --from=build /app/build /usr/share/nginx/html
+ENV NODE_ENV=production
 
-# Remove default nginx configs if you customize
-RUN rm /etc/nginx/conf.d/default.conf
+# Install serve globally for static file serving
+RUN npm install -g serve
 
-# Add custom nginx.conf if needed to enable gzip, caching etc.
-# COPY nginx.conf /etc/nginx/conf.d/
+# Copy build output from builder
+COPY --from=builder /app/build ./build
 
-EXPOSE 80
+EXPOSE 3000
 
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["serve", "-s", "build", "-l", "3000"]
