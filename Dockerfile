@@ -18,7 +18,7 @@ ENV NODE_ENV=production
 RUN npm install -g serve
 
 # Copy build output from builder
-COPY --from=builder /app/build ./build
+COPY --from=builder /app/dist ./dist
 
 EXPOSE 3000
 
