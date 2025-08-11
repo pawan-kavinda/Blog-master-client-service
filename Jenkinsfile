@@ -45,15 +45,21 @@ pipeline {
 
         stage('Deploy to EC2') {
             steps {
-                sshagent(credentials: ['ec2-ssh-key']) {
+                sshagent(credentials: ['ec']) {
                     sh """
-                    ssh -o StrictHostKeyChecking=no ${EC2_USER}@${EC2_HOST} '
+                    echo "Connecting to EC2 instance..."
+                    ssh -o StrictHostKeyChecking=no -o ConnectTimeout=30 ${EC2_USER}@${EC2_HOST} '
+                        echo "Connected successfully! Starting deployment..."
                         echo "Pulling latest Docker image from Docker Hub..."
-                        echo "${DOCKERHUB_CRED_PSW}" | docker login -u "${DOCKERHUB_CRED_USR}" --password-stdin &&
-                        docker pull ${IMAGE_NAME}:latest &&
-                        docker stop client-service || true &&
-                        docker rm client-service || true &&
-                        docker run -d --name client-service -p 80:80 ${IMAGE_NAME}:latest &&
+                        echo "${DOCKERHUB_CRED_PSW}" | docker login -u "${DOCKERHUB_CRED_USR}" --password-stdin
+                        docker pull ${IMAGE_NAME}:latest
+                        echo "Stopping existing container..."
+                        docker stop client-service || true
+                        docker rm client-service || true
+                        echo "Starting new container..."
+                        docker run -d --name client-service -p 80:80 ${IMAGE_NAME}:latest
+                        echo "Verifying deployment..."
+                        docker ps | grep client-service
                         echo "Deployment completed successfully!"
                     '
                     """
