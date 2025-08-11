@@ -13,7 +13,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/pawan-kavinda/Blog-master-client-service'
+                git branch: 'main', url: 'https://github.com/pawan-kavinda/Blog-master-client-service'
             }
         }
 
