@@ -38,7 +38,7 @@ const PostDetailPage: React.FC = () => {
 
   const fetchPost = async () => {
     try {
-      const response = await fetch(`${BLOG_SERVICE_URL}/${id}`);
+      const response = await fetch(`${BLOG_SERVICE_URL}/posts/${id}`);
       if (response.ok) {
         const data = await response.json();
         setPost(data);

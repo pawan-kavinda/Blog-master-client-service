@@ -29,7 +29,7 @@ api.interceptors.response.use(
 );
 
 export const authService = {
-  login: async (email: string, password: string) => {
+  login: async (email: string, password: string) => {    
     const response = await api.post('/login', { email, password });
     return response.data;
   },
@@ -52,27 +52,27 @@ export const authService = {
 
 export const postService = {
   getAllPosts: async (params?: any) => {
-    const response = await api.get(`${BLOG_SERVICE_URL}`, { params });
+    const response = await api.get(`${BLOG_SERVICE_URL}/posts`, { params });
     return response.data;
   },
 
   getPost: async (id: number) => {
-    const response = await api.get(`${BLOG_SERVICE_URL}/${id}`);
+    const response = await api.get(`${BLOG_SERVICE_URL}/posts/${id}`);
     return response.data;
   },
 
   createPost: async (postData: any) => {
-    const response = await api.post(`${BLOG_SERVICE_URL}`, postData);
+    const response = await api.post(`${BLOG_SERVICE_URL}/posts`, postData);
     return response.data;
   },
 
   updatePost: async (id: number, postData: any) => {
-    const response = await api.put(`${BLOG_SERVICE_URL}/${id}`, postData);
+    const response = await api.put(`${BLOG_SERVICE_URL}/posts/${id}`, postData);
     return response.data;
   },
 
   deletePost: async (id: number) => {
-    const response = await api.delete(`${BLOG_SERVICE_URL}/${id}`);
+    const response = await api.delete(`${BLOG_SERVICE_URL}/posts/${id}`);
     return response.data;
   },
 
