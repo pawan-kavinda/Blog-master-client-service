@@ -9,11 +9,7 @@ interface Post {
   title: string;
   content: string;
   excerpt: string;
-  author: {
-    id: number;
-    username: string;
-    avatar: string;
-  };
+  author: { id: number; username: string; avatar: string };
   createdAt: string;
   updatedAt: string;
   tags: string[];
@@ -39,7 +35,7 @@ const HomePage: React.FC = () => {
       });
 
       const mappedPosts: Post[] = response.items.map((item: any) => ({
-        id: item.id, // keep as string if your routes can handle it
+        id: item.id,
         title: item.title,
         excerpt:
           item.content?.slice(0, 120) +
@@ -52,8 +48,8 @@ const HomePage: React.FC = () => {
           )}`,
         },
         createdAt: item.created_at,
-        tags: [], // No tags in API → empty array
-        featuredImage: undefined, // Optional, set if available in API
+        tags: [],
+        featuredImage: undefined,
       }));
 
       setPosts(mappedPosts);
@@ -81,127 +77,114 @@ const HomePage: React.FC = () => {
     setCurrentPage(1);
   };
 
-  const getAllTags = () => {
-    const allTags = posts.flatMap((post) => post.tags);
-    return [...new Set(allTags)];
-  };
+  const getAllTags = () => [...new Set(posts.flatMap((p) => p.tags))];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
+    <div className="min-h-screen bg-gray-900 text-gray-100">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Welcome to <span className="text-yellow-300">BlogPlatform</span>
-            </h1>
-            <p className="text-xl md:text-2xl mb-8 text-indigo-100 max-w-3xl mx-auto">
-              Discover amazing stories, share your thoughts, and connect with a
-              community of passionate writers
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                to="/register"
-                className="bg-yellow-400 text-gray-900 hover:bg-yellow-300 px-8 py-3 rounded-lg font-semibold text-lg transition-all transform hover:scale-105"
-              >
-                Join Our Community
-              </Link>
-              <Link
-                to="/create"
-                className="border-2 border-white text-white hover:bg-white hover:text-indigo-600 px-8 py-3 rounded-lg font-semibold text-lg transition-all"
-              >
-                Start Writing
-              </Link>
-            </div>
+      <div className="relative bg-gradient-to-r from-gray-800 via-gray-900 to-black">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-28 text-center">
+          <h1 className="text-5xl md:text-7xl font-extrabold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-red-400 to-pink-500">
+            The Content Forge
+          </h1>
+          <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto">
+            Explore cutting-edge articles, connect with top-tier authors, and
+            share your insights in a high-impact community.
+          </p>
+          <div className="flex flex-col sm:flex-row justify-center gap-5">
+            <Link
+              to="/register"
+              className="bg-yellow-500 hover:bg-yellow-400 text-gray-900 px-8 py-3 rounded-xl font-semibold text-lg transition-all transform hover:scale-105 shadow-lg"
+            >
+              Join Now
+            </Link>
+            <Link
+              to="/create"
+              className="border-2 border-gray-100 hover:bg-gray-100 hover:text-gray-900 px-8 py-3 rounded-xl font-semibold text-lg transition-all shadow-lg"
+            >
+              Start Writing
+            </Link>
           </div>
         </div>
       </div>
 
       {/* Stats Section */}
-      <div className="bg-white py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="bg-indigo-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                <Users className="h-8 w-8 text-indigo-600" />
+      <div className="py-20 bg-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-12">
+          {[
+            {
+              icon: <Users className="h-8 w-8 text-yellow-400" />,
+              title: "Community",
+              desc: "Engage with thousands of active authors",
+            },
+            {
+              icon: <BookOpen className="h-8 w-8 text-pink-400" />,
+              title: "Content",
+              desc: "High-quality, insightful articles",
+            },
+            {
+              icon: <MessageSquare className="h-8 w-8 text-indigo-400" />,
+              title: "Engagement",
+              desc: "Comment, react, and network with peers",
+            },
+          ].map((stat, i) => (
+            <div
+              key={i}
+              className="bg-gray-700 p-8 rounded-xl shadow-xl transform transition-all hover:-translate-y-2 hover:shadow-2xl"
+            >
+              <div className="flex items-center justify-center mb-4 w-16 h-16 bg-gray-900 rounded-full mx-auto">
+                {stat.icon}
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                Growing Community
-              </h3>
-              <p className="text-gray-600">
-                Join thousands of writers sharing their stories
-              </p>
+              <h3 className="text-2xl font-bold mb-2">{stat.title}</h3>
+              <p className="text-gray-400">{stat.desc}</p>
             </div>
-            <div className="text-center">
-              <div className="bg-purple-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                <BookOpen className="h-8 w-8 text-purple-600" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                Quality Content
-              </h3>
-              <p className="text-gray-600">
-                Discover well-crafted articles on various topics
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="bg-emerald-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                <MessageSquare className="h-8 w-8 text-emerald-600" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                Engage & Connect
-              </h3>
-              <p className="text-gray-600">
-                Comment, react, and build meaningful connections
-              </p>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Search and Filter */}
-        <div className="mb-12">
-          <div className="flex flex-col lg:flex-row gap-6 items-center justify-between">
-            <form onSubmit={handleSearch} className="flex-1 max-w-md">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Search articles..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                />
-              </div>
-            </form>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        {/* Search & Filter */}
+        <div className="flex flex-col lg:flex-row gap-6 items-center justify-between mb-12">
+          <form
+            onSubmit={handleSearch}
+            className="flex-1 max-w-md relative group"
+          >
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-yellow-400 transition-colors" />
+            <input
+              type="text"
+              placeholder="Search articles..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-3 rounded-xl bg-gray-800 border border-gray-600 focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all"
+            />
+          </form>
 
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
-                <Filter className="h-5 w-5 text-gray-500" />
-                <select
-                  value={selectedTag}
-                  onChange={(e) => setSelectedTag(e.target.value)}
-                  className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                >
-                  <option value="">All Topics</option>
-                  {getAllTags().map((tag) => (
-                    <option key={tag} value={tag}>
-                      {tag}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {(searchTerm || selectedTag) && (
-                <button
-                  onClick={clearFilters}
-                  className="text-indigo-600 hover:text-indigo-800 font-medium"
-                >
-                  Clear Filters
-                </button>
-              )}
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <Filter className="h-5 w-5 text-gray-400" />
+              <select
+                value={selectedTag}
+                onChange={(e) => setSelectedTag(e.target.value)}
+                className="px-3 py-2 rounded-xl bg-gray-800 border border-gray-600 focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all"
+              >
+                <option value="">All Topics</option>
+                {getAllTags().map((tag) => (
+                  <option key={tag} value={tag}>
+                    {tag}
+                  </option>
+                ))}
+              </select>
             </div>
+
+            {(searchTerm || selectedTag) && (
+              <button
+                onClick={clearFilters}
+                className="text-yellow-400 hover:text-yellow-300 font-medium transition-colors"
+              >
+                Clear
+              </button>
+            )}
           </div>
         </div>
 
@@ -211,14 +194,14 @@ const HomePage: React.FC = () => {
             {[...Array(6)].map((_, i) => (
               <div
                 key={i}
-                className="bg-white rounded-xl shadow-md overflow-hidden animate-pulse"
+                className="bg-gray-800 rounded-xl shadow-lg overflow-hidden animate-pulse"
               >
-                <div className="h-48 bg-gray-200"></div>
+                <div className="h-52 bg-gray-700"></div>
                 <div className="p-6">
-                  <div className="h-4 bg-gray-200 rounded mb-2"></div>
-                  <div className="h-4 bg-gray-200 rounded mb-4"></div>
-                  <div className="h-3 bg-gray-200 rounded mb-3"></div>
-                  <div className="h-3 bg-gray-200 rounded"></div>
+                  <div className="h-4 bg-gray-700 rounded mb-2"></div>
+                  <div className="h-4 bg-gray-700 rounded mb-4"></div>
+                  <div className="h-3 bg-gray-700 rounded mb-3"></div>
+                  <div className="h-3 bg-gray-700 rounded"></div>
                 </div>
               </div>
             ))}
@@ -239,33 +222,31 @@ const HomePage: React.FC = () => {
                     setCurrentPage((prev) => Math.max(prev - 1, 1))
                   }
                   disabled={currentPage === 1}
-                  className="px-4 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
+                  className="px-4 py-2 rounded-xl border border-gray-700 hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Previous
                 </button>
 
-                <div className="flex space-x-1">
-                  {[...Array(totalPages)].map((_, i) => (
-                    <button
-                      key={i + 1}
-                      onClick={() => setCurrentPage(i + 1)}
-                      className={`px-4 py-2 rounded-lg transition-colors ${
-                        currentPage === i + 1
-                          ? "bg-indigo-600 text-white"
-                          : "border border-gray-300 hover:bg-gray-50"
-                      }`}
-                    >
-                      {i + 1}
-                    </button>
-                  ))}
-                </div>
+                {[...Array(totalPages)].map((_, i) => (
+                  <button
+                    key={i + 1}
+                    onClick={() => setCurrentPage(i + 1)}
+                    className={`px-4 py-2 rounded-xl transition-colors ${
+                      currentPage === i + 1
+                        ? "bg-yellow-500 text-gray-900"
+                        : "border border-gray-700 hover:bg-gray-700"
+                    }`}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
 
                 <button
                   onClick={() =>
                     setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                   }
                   disabled={currentPage === totalPages}
-                  className="px-4 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition-colors"
+                  className="px-4 py-2 rounded-xl border border-gray-700 hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Next
                 </button>
@@ -273,19 +254,17 @@ const HomePage: React.FC = () => {
             )}
           </>
         ) : (
-          <div className="text-center py-12">
-            <BookOpen className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-gray-600 mb-2">
-              No posts found
-            </h3>
-            <p className="text-gray-500 mb-6">
+          <div className="text-center py-16">
+            <BookOpen className="h-16 w-16 text-gray-600 mx-auto mb-4" />
+            <h3 className="text-2xl font-semibold mb-2">No posts found</h3>
+            <p className="text-gray-400 mb-6">
               {searchTerm || selectedTag
-                ? "Try adjusting your search criteria"
-                : "Be the first to share your story!"}
+                ? "Try adjusting your search criteria."
+                : "Be the first to share your insights!"}
             </p>
             <Link
               to="/create"
-              className="bg-indigo-600 text-white hover:bg-indigo-700 px-6 py-3 rounded-lg font-medium transition-colors"
+              className="bg-yellow-500 hover:bg-yellow-400 text-gray-900 px-6 py-3 rounded-xl font-medium transition-all shadow-lg"
             >
               Create First Post
             </Link>
