@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import { PenTool, User, LogOut, Menu, X, Home, Plus } from 'lucide-react';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
+import { PenTool, User, LogOut, Menu, X, Home, Plus } from "lucide-react";
 
 const Navbar: React.FC = () => {
   const { user, logout, isAuthenticated } = useAuth();
@@ -10,7 +10,7 @@ const Navbar: React.FC = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/');
+    navigate("/");
     setMobileMenuOpen(false);
   };
 
@@ -24,23 +24,26 @@ const Navbar: React.FC = () => {
         <div className="flex justify-between h-16">
           {/* Logo and Desktop Navigation */}
           <div className="flex items-center">
-            <Link to="/" className="flex items-center space-x-2 text-xl font-bold text-indigo-600 hover:text-indigo-700 transition-colors">
-              <PenTool color='green' className="h-8 w-8" />
+            <Link
+              to="/"
+              className="flex items-center space-x-2 text-xl font-bold text-indigo-600 hover:text-indigo-700 transition-colors"
+            >
+              <PenTool color="green" className="h-8 w-8" />
               <span className="hidden sm:block red">Vite Blogger</span>
             </Link>
-            
+
             {/* Desktop Navigation */}
             <div className="hidden md:ml-8 md:flex md:space-x-8">
-              <Link 
-                to="/" 
+              <Link
+                to="/"
                 className="flex items-center space-x-1 text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
               >
                 <Home className="h-4 w-4" />
                 <span>Home</span>
               </Link>
               {isAuthenticated && (
-                <Link 
-                  to="/create" 
+                <Link
+                  to="/create"
                   className="flex items-center space-x-1 text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >
                   <Plus className="h-4 w-4" />
@@ -53,35 +56,35 @@ const Navbar: React.FC = () => {
           {/* Desktop Auth Section */}
           <div className="hidden md:flex md:items-center md:space-x-4">
             {isAuthenticated ? (
-              <div className="flex items-center space-x-4">
-                <Link 
-                  to="/profile"
-                  className="flex items-center space-x-2 text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >
-                  <img 
-                    src={user?.avatar} 
-                    alt={user?.username}
-                    className="h-6 w-6 rounded-full object-cover"
-                  />
-                  <span>{user?.username}</span>
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className="flex items-center space-x-1 text-gray-700 hover:text-red-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >
-                  <LogOut className="h-4 w-4" />
-                  <span>Logout</span>
-                </button>
+              <div className="hidden md:flex md:items-center md:space-x-4">
+                {isAuthenticated ? (
+                  <div className="flex items-center space-x-4">
+                    <Link
+                      to="/profile"
+                      className="flex items-center space-x-2 text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                    >
+                      <User className="h-6 w-6 rounded-full" />
+                      <span>{user?.username}</span>
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="flex items-center space-x-1 text-gray-700 hover:text-red-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      <span>Logout</span>
+                    </button>
+                  </div>
+                ) : null}
               </div>
             ) : (
               <div className="flex items-center space-x-4">
-                <Link 
+                <Link
                   to="/login"
                   className="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                 >
                   Login
                 </Link>
-                <Link 
+                <Link
                   to="/register"
                   className="bg-indigo-600 text-white hover:bg-indigo-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
                 >
@@ -111,18 +114,18 @@ const Navbar: React.FC = () => {
       {mobileMenuOpen && (
         <div className="md:hidden bg-white border-t border-gray-200">
           <div className="px-4 pt-2 pb-3 space-y-1">
-            <Link 
-              to="/" 
+            <Link
+              to="/"
               onClick={closeMobileMenu}
               className="flex items-center space-x-2 text-gray-700 hover:text-indigo-600 hover:bg-gray-50 block px-3 py-2 rounded-md text-base font-medium transition-colors"
             >
               <Home className="h-5 w-5" />
               <span>Home</span>
             </Link>
-            
+
             {isAuthenticated && (
-              <Link 
-                to="/create" 
+              <Link
+                to="/create"
                 onClick={closeMobileMenu}
                 className="flex items-center space-x-2 text-gray-700 hover:text-indigo-600 hover:bg-gray-50 block px-3 py-2 rounded-md text-base font-medium transition-colors"
               >
@@ -130,16 +133,16 @@ const Navbar: React.FC = () => {
                 <span>Create Post</span>
               </Link>
             )}
-            
+
             {isAuthenticated ? (
               <>
-                <Link 
+                <Link
                   to="/profile"
                   onClick={closeMobileMenu}
                   className="flex items-center space-x-2 text-gray-700 hover:text-indigo-600 hover:bg-gray-50 block px-3 py-2 rounded-md text-base font-medium transition-colors"
                 >
-                  <img 
-                    src={user?.avatar} 
+                  <img
+                    src={user?.avatar}
                     alt={user?.username}
                     className="h-5 w-5 rounded-full object-cover"
                   />
@@ -155,14 +158,14 @@ const Navbar: React.FC = () => {
               </>
             ) : (
               <>
-                <Link 
+                <Link
                   to="/login"
                   onClick={closeMobileMenu}
                   className="text-gray-700 hover:text-indigo-600 hover:bg-gray-50 block px-3 py-2 rounded-md text-base font-medium transition-colors"
                 >
                   Login
                 </Link>
-                <Link 
+                <Link
                   to="/register"
                   onClick={closeMobileMenu}
                   className="bg-indigo-600 text-white hover:bg-indigo-700 block px-3 py-2 rounded-md text-base font-medium transition-colors mx-3"

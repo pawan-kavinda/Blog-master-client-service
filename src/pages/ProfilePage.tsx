@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '../contexts/AuthContext';
-import { User, Mail, Calendar, Edit, BookOpen } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { useAuth } from "../contexts/AuthContext";
+import { User, Mail, Calendar, Edit, BookOpen } from "lucide-react";
+import { AUTH_SERVICE_URL } from "../config";
 
 interface UserProfile {
   id: number;
-  username: string;
+  firstName: string;
   email: string;
   created_at: string;
   posts_count: number;
@@ -21,18 +22,18 @@ const ProfilePage: React.FC = () => {
 
   const fetchProfile = async () => {
     try {
-      const response = await fetch('/api/users/profile', {
+      const response = await fetch(`${AUTH_SERVICE_URL}/viewProfile`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
-      
+
       if (response.ok) {
         const data = await response.json();
         setProfile(data);
       }
     } catch (error) {
-      console.error('Error fetching profile:', error);
+      console.error("Error fetching profile:", error);
     } finally {
       setLoading(false);
     }
@@ -50,7 +51,9 @@ const ProfilePage: React.FC = () => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Profile not found</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            Profile not found
+          </h2>
         </div>
       </div>
     );
@@ -66,7 +69,9 @@ const ProfilePage: React.FC = () => {
                 <User className="w-12 h-12 text-white" />
               </div>
               <div>
-                <h1 className="text-4xl font-bold text-white mb-2">{profile.username}</h1>
+                <h1 className="text-4xl font-bold text-white mb-2">
+                  {profile.firstName}
+                </h1>
                 <p className="text-indigo-100 text-lg">Blog Author</p>
               </div>
             </div>
@@ -75,14 +80,18 @@ const ProfilePage: React.FC = () => {
           <div className="p-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">Profile Information</h2>
-                
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                  Profile Information
+                </h2>
+
                 <div className="space-y-4">
                   <div className="flex items-center space-x-3 p-4 bg-gray-50 rounded-lg">
                     <User className="w-5 h-5 text-gray-600" />
                     <div>
-                      <p className="text-sm font-medium text-gray-500">Username</p>
-                      <p className="text-gray-900">{profile.username}</p>
+                      <p className="text-sm font-medium text-gray-500">
+                        Username
+                      </p>
+                      <p className="text-gray-900">{profile.firstName}</p>
                     </div>
                   </div>
 
@@ -97,13 +106,18 @@ const ProfilePage: React.FC = () => {
                   <div className="flex items-center space-x-3 p-4 bg-gray-50 rounded-lg">
                     <Calendar className="w-5 h-5 text-gray-600" />
                     <div>
-                      <p className="text-sm font-medium text-gray-500">Member Since</p>
+                      <p className="text-sm font-medium text-gray-500">
+                        Member Since
+                      </p>
                       <p className="text-gray-900">
-                        {new Date(profile.created_at).toLocaleDateString('en-US', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric'
-                        })}
+                        {new Date(profile.created_at).toLocaleDateString(
+                          "en-US",
+                          {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          }
+                        )}
                       </p>
                     </div>
                   </div>
@@ -111,15 +125,19 @@ const ProfilePage: React.FC = () => {
               </div>
 
               <div className="space-y-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-4">Statistics</h2>
-                
+                <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                  Statistics
+                </h2>
+
                 <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-6 rounded-xl">
                   <div className="flex items-center space-x-4">
                     <div className="w-12 h-12 bg-indigo-600 rounded-lg flex items-center justify-center">
                       <BookOpen className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <p className="text-3xl font-bold text-gray-900">{profile.posts_count}</p>
+                      <p className="text-3xl font-bold text-gray-900">
+                        {profile.posts_count}
+                      </p>
                       <p className="text-gray-600">Posts Published</p>
                     </div>
                   </div>
