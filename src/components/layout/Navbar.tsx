@@ -25,8 +25,8 @@ const Navbar: React.FC = () => {
           {/* Logo and Desktop Navigation */}
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-2 text-xl font-bold text-indigo-600 hover:text-indigo-700 transition-colors">
-              <PenTool className="h-8 w-8" />
-              <span className="hidden sm:block">BlogPlatform</span>
+              <PenTool color='green' className="h-8 w-8" />
+              <span className="hidden sm:block red">Vite Blogger</span>
             </Link>
             
             {/* Desktop Navigation */}
