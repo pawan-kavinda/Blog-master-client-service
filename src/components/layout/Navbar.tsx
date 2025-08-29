@@ -29,7 +29,7 @@ const Navbar: React.FC = () => {
               className="flex items-center space-x-2 text-xl font-bold text-indigo-600 hover:text-indigo-700 transition-colors"
             >
               <PenTool color="green" className="h-8 w-8" />
-              <span className="hidden sm:block red">Vite Blogger local</span>
+              <span className="hidden sm:block red">Vite Blogger Local</span>
             </Link>
 
             {/* Desktop Navigation */}
