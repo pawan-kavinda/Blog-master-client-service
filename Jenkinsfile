@@ -1,39 +1,58 @@
 pipeline {
     agent any
+
     environment {
         REGISTRY = "localhost:5000"
         IMAGE_NAME = "blog-client"
         IMAGE_TAG = "1.0"
         KUBECONFIG = "C:\\Users\\user\\.kube\\config"
+        K8S_NAMESPACE = "default"
     }
-    triggers {
-        githubPush()   
-    }
+
+    // triggers { githubPush() } // Uncomment when webhook is ready
+
     stages {
         stage('Checkout') {
             steps {
+                echo "Cloning repository..."
                 git branch: 'main', url: 'https://github.com/pawan-kavinda/Blog-master-client-service.git'
             }
         }
+
         stage('Build Docker Image') {
             steps {
+                echo "Building Docker image..."
                 bat "docker build -t %REGISTRY%/%IMAGE_NAME%:%IMAGE_TAG% ."
             }
         }
+
         stage('Push Image') {
             steps {
+                echo "Pushing image to local registry..."
                 bat "docker push %REGISTRY%/%IMAGE_NAME%:%IMAGE_TAG%"
             }
         }
+
         stage('Deploy to Kubernetes') {
             steps {
-                bat "kubectl set image deployment/blog-client blog-client=%REGISTRY%/%IMAGE_NAME%:%IMAGE_TAG%"
-                bat "kubectl rollout status deployment/blog-client"
+                echo "Deploying to Kubernetes..."
+                bat """
+                kubectl --kubeconfig=%KUBECONFIG% set image deployment/%IMAGE_NAME% %IMAGE_NAME%=%REGISTRY%/%IMAGE_NAME%:%IMAGE_TAG% -n %K8S_NAMESPACE%
+                kubectl --kubeconfig=%KUBECONFIG% rollout status deployment/%IMAGE_NAME% -n %K8S_NAMESPACE%
+                """
             }
         }
     }
-}
 
+    post {
+        success {
+            echo "Deployment successful! Access frontend via port-forward or service URL."
+        }
+        failure {
+            echo "Pipeline failed. Check logs above."
+        }
+    }
+}
 
 // pipeline {
 //     agent any
