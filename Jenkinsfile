@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        REGISTRY = "localhost:5000"
+        REGISTRY = "k3d-registry.localhost:5000"
         IMAGE_NAME = "blog-client"
         IMAGE_TAG = "${env.BUILD_NUMBER}"   
         KUBECONFIG = "C:\\Users\\user\\.kube\\config"
