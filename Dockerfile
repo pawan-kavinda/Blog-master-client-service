@@ -1,25 +1,36 @@
-# ---- Stage 1: Build ----
-FROM node:20-alpine AS builder
+FROM node:20-bullseye AS builder
 WORKDIR /app
 
+# Install dependencies
 COPY package*.json ./
-RUN npm ci --verbose
+RUN npm ci
 
+# Copy source code and build
 COPY . .
 RUN npm run build
 
-# ---- Stage 2: Production ----
-FROM node:20-alpine AS production
-WORKDIR /app
+# Production stage with nginx
+FROM nginx:alpine
 
-ENV NODE_ENV=production
+# Copy built static files to nginx
+COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Install serve globally for static file serving
-RUN npm install -g serve
+# Create nginx configuration for React Router
+RUN echo 'server { \
+    listen 80; \
+    server_name localhost; \
+    root /usr/share/nginx/html; \
+    index index.html; \
+    location / { \
+        try_files $uri $uri/ /index.html; \
+    } \
+    # Enable gzip compression \
+    gzip on; \
+    gzip_types text/plain text/css application/json application/javascript text/xml application/xml text/javascript; \
+}' > /etc/nginx/conf.d/default.conf
 
-# Copy build output from builder
-COPY --from=builder /app/dist ./dist
+# Expose port
+EXPOSE 80
 
-EXPOSE 3000
-
-CMD ["serve", "-s", "dist", "-l", "3000"]
+# Start nginx
+CMD ["nginx", "-g", "daemon off;"]
