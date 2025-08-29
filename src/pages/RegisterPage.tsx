@@ -60,7 +60,7 @@ const RegisterPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-white flex items-center justify-center px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full">
-        {/* Header */}
+        
         <div className="text-center mb-8">
           <div className="bg-gradient-to-tr from-purple-400 to-pink-500 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4 shadow-lg">
             <UserPlus className="h-10 w-10 text-white" />
